@@ -1,23 +1,12 @@
-# Kafka Messaging Project
-
-A Go project demonstrating Kafka messaging patterns including pub/sub, load balancing, and persistent messaging.
-
-## Project Overview
-
-This project showcases Kafka messaging capabilities with:
-- **Publishers**: Message producers with various delivery guarantees
-- **Consumers**: Message consumers with group coordination
-- **Load Balancing**: Consumer groups for distributed processing
-- **Persistence**: Kafka's built-in message persistence and replication
-- **Monitoring**: Kafka cluster monitoring and metrics
+# Kafka Platform
 
 ## Services & Ports
 
 | Service | Port | Description |
 |---------|------|-------------|
-| **Kafka Broker** | 9092 | Message broker |
+| **Kafka Broker** | 9093 | Message broker |
+| **Kafka UI** | 8881 | Kafka Web UI |
 | **Zookeeper** | 2181 | Kafka coordination service |
-| **Schema Registry** | 8081 | Schema management |
 
 ## Quick Start
 
@@ -47,5 +36,4 @@ make run-producer
 ```
 
 ## Monitoring
-- **Kafka UI**: http://localhost:8080
-- **Schema Registry UI**: http://localhost:8081
+- **Kafka UI**: http://localhost:8881
