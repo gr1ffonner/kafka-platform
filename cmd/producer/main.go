@@ -13,6 +13,7 @@ import (
 
 const (
 	message = "Hello, world"
+	topic   = "test"
 )
 
 type Message struct {
@@ -52,13 +53,13 @@ func main() {
 	kafkaProducer := producer.NewProducer(ctx)
 	defer kafkaProducer.Close()
 
-	err = kafkaProducer.PublishMessage(ctx, message)
+	err = kafkaProducer.PublishMessage(ctx, topic, message)
 	if err != nil {
 		logger.Error("Failed to publish message", "error", err, "message", message)
 		os.Exit(1)
 	}
 
-	err = kafkaProducer.PublishMessage(ctx, msg)
+	err = kafkaProducer.PublishMessage(ctx, topic, msg)
 	if err != nil {
 		logger.Error("Failed to publish message", "error", err, "message", msg)
 		os.Exit(1)

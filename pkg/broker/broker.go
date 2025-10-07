@@ -9,8 +9,7 @@ import (
 )
 
 var (
-	topics  = []string{"test"}
-	brokers = []string{"localhost:9093"}
+	topics = []string{"test"}
 )
 
 // Broker handles Kafka infrastructure setup

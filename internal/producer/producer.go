@@ -3,6 +3,7 @@ package producer
 import (
 	"context"
 	"encoding/json"
+	"errors"
 	"log/slog"
 	"time"
 
@@ -10,13 +11,11 @@ import (
 )
 
 var (
-	topic   = "test"
 	brokers = []string{"localhost:9093"}
 )
 
 type Producer struct {
 	writer *kafka.Writer
-	topic  string
 }
 
 func NewProducer(ctx context.Context) *Producer {
@@ -24,9 +23,6 @@ func NewProducer(ctx context.Context) *Producer {
 		writer: &kafka.Writer{
 			// Addr: list of broker addresses to connect to
 			Addr: kafka.TCP(brokers...),
-
-			// Topic: default topic to write messages to (can be overridden per message)
-			Topic: topic,
 
 			// Balancer: algorithm for distributing messages across partitions
 			// LeastBytes balances by choosing partition with least data
@@ -40,7 +36,6 @@ func NewProducer(ctx context.Context) *Producer {
 			// Larger batches improve throughput but increase memory usage
 			BatchSize: 100,
 		},
-		topic: topic,
 	}
 }
 
@@ -52,8 +47,11 @@ func (p *Producer) Close() error {
 }
 
 // PublishMessage publishes a message synchronously
-func (p *Producer) PublishMessage(ctx context.Context, message any) error {
-	slog.Info("publishing message", "message", message, "topic", p.topic)
+func (p *Producer) PublishMessage(ctx context.Context, topic string, message any) error {
+	if topic == "" {
+		return errors.New("topic is required")
+	}
+	slog.Info("publishing message", "message", message, "topic", topic)
 
 	var messageBytes []byte
 
@@ -67,6 +65,7 @@ func (p *Producer) PublishMessage(ctx context.Context, message any) error {
 	// Create Kafka message
 	kafkaMsg := kafka.Message{
 		Value: messageBytes,
+		Topic: topic,
 	}
 
 	// Send message
@@ -75,6 +74,6 @@ func (p *Producer) PublishMessage(ctx context.Context, message any) error {
 		return err
 	}
 
-	slog.Info("message published", "message", message, "topic", p.topic)
+	slog.Info("message published", "message", message, "topic", topic)
 	return nil
 }
